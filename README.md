@@ -3,7 +3,7 @@
 Este repositório contém o projeto da Fase 3 do Tech Challenge (Pós-Tech IA para Devs). O objetivo desta etapa foi elevar o sistema hospitalar a um nível superior de especialização e segurança através do Fine-Tuning de um modelo de linguagem de grande escala (LLM) com protocolos internos e da criação de um assistente virtual médico estruturado com base em grafos de estado (LangGraph).
 
 ## 📺 Demonstração do Projeto
-* **Link para o YouTube:** 
+* **Link para o YouTube:** https://youtu.be/qLA7RipJ7WY
 * **Apresentação:** Treinamento do modelo customizado, execução do grafo clínico com tomada de decisão automatizada e validação da trilha de auditoria.
 
 ## 🛠️ Arquitetura do projeto
