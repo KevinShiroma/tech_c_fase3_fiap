@@ -1,38 +1,39 @@
-# Tech Challenge - Fase 2: Otimização Genética e Interpretação de Diagnósticos com LLM
+# Tech Challenge - Fase 3: Fine-Tuning de LLM Médico e Orquestração de Estados com LangGraph
 
-Este repositório contém o projeto da **Fase 2** do Tech Challenge (Pós-Tech IA para Devs). O projeto evolui a base do sistema de suporte ao diagnóstico da Fase 1, incorporando **Algoritmos Genéticos (AG)** para a otimização de hiperparâmetros e **Modelos de Linguagem de Grande Escala (LLM)** para a interpretação humanizada dos resultados médicos.
+Este repositório contém o projeto da Fase 3 do Tech Challenge (Pós-Tech IA para Devs). O objetivo desta etapa foi elevar o sistema hospitalar a um nível superior de especialização e segurança através do Fine-Tuning de um modelo de linguagem de grande escala (LLM) com protocolos internos e da criação de um assistente virtual médico estruturado com base em grafos de estado (LangGraph).
 
 ## 📺 Demonstração do Projeto
-* **Link para o YouTube:** https://www.youtube.com/watch?v=5YBZP57DvKs
-* **Apresentação:** Demonstração do pipeline no Databricks, tracking no MLflow e geração de insights via GPT-4o.
+* **Link para o YouTube:** 
+* **Apresentação:** Treinamento do modelo customizado, execução do grafo clínico com tomada de decisão automatizada e validação da trilha de auditoria.
 
 ## 🛠️ Arquitetura do projeto
 
-<img width="2944" height="1248" alt="image" src="https://github.com/KevinShiroma/tech_c_fase2_fiap/blob/main/arquitetura/arquitetura_projeto.png" />
+<img width="2944" height="1248" alt="image" src="https://github.com/KevinShiroma/tech_c_fase3_fiap/blob/main/arquitetura/FLOWS.png" />
 
-O projeto foi desenvolvido em ambiente Databricks, utilizando a Arquitetura Medalhão (Delta Lake) para garantir a governança dos dados médicos.
+O ecossistema foi projetado para operar com total governança de dados, unindo técnicas avançadas de especialização de modelos e orquestração determinística.
 
-* **Processamento & Escalabilidade:** Clusters Spark com Autoscaling para lidar com o processamento paralelo das populações do AG e grandes volumes de dados.
+* **Especialização de IA:** Framework Unsloth para o fine-tuning quantizado em 4-bits do Llama-3-8b, alimentado pelo dataset médico curado MedQuAD.
 
-* **Observabilidade:** MLflow Tracking para monitoramento de métricas (F1-Score), parâmetros e versões dos modelos otimizados.
+* **Orquestração por Estados:** Framework LangGraph para modelar o fluxo de atendimento da equipe médica através de um grafo direcionado com tomada de decisão condicional.
 
-* **IA Generativa:** OpenAI GPT-4o para a camada de interpretação em linguagem natural.
+* **Camada de Dados:** Banco relacional SQLite local atuando como repositório de prontuários clínicos e exames controlados.
 
-## 📋 Sobre a Evolução (Fase 2)
+* * **Governança & Compliance:** Módulo de auditoria assíncrona responsável por registrar cada transação e inferência no arquivo físico audit_trail.log.
 
-O foco desta etapa foi elevar a precisão clínica e a interpretabilidade do sistema hospitalar através de duas frentes tecnológicas principais:
+## 📋 Sobre a Evolução (Fase 3)
 
-### 1. Otimização Evolutiva (Algoritmos Genéticos)
-Substituímos a busca manual de parâmetros por um processo de evolução artificial para os modelos KNN e Random Forest:
-* **Codificação Genética:** Os hiperparâmetros (como n_estimators, max_depth e k-neighbors) foram mapeados como genes.
-* **Operadores Genéticos:** Implementação de seleção por roleta russa, cruzamento aritmético e mutação aleatória.
-* **Função Fitness:** Otimização baseada no **F1-Score da Classe 0 (Risco)**, garantindo uma triagem médica rigorosa em dados desbalanceados.
+O foco desta fase foi mitigar alucinações e garantir a segurança biológica e regulatória em ambiente hospitalar, dividindo o projeto em duas frentes complementares:
 
-### 2. Interpretação de Resultados (LLM & Prompt Engineering)
-Integração com a API da OpenAI (GPT-4o) para transformar predições técnicas em relatórios clínicos acionáveis:
-* **Persona:** Atuação da LLM como "Assistente de Diagnóstico Psiquiátrico".
-* **Top 5 Indicadores:** O prompt utiliza as variáveis de maior importância identificadas pelo Random Forest (anxiety_score, depression_score, productivity_score, social_support_score e sleep_hours).
-* **Insights Acionáveis:** Geração automática de recomendações de conduta imediata (ex: higiene do sono, busca por terapia) para a equipe médica.
+### 1. Fine-Tuning de LLM com Dados Médicos
+Aprimoramos as respostas clínicas especializando o modelo Llama-3-8b-bnb-4bit via Unsloth:
+* **Curadoria e Limpeza::** Pipeline em Pandas e expressões regulares (Regex) para remover tags poluídas, textos repetitivos de interfaces e dados nulos do dataset MedQuAD.
+* **Formatação de Prompt:** Mapeamento estruturado das perguntas e respostas no padrão Alpaca Prompt Template.
+* **Métricas de Otimização** O treinamento reduziu o Loss inicial de 1.93 para uma convergência saudável de 0.73 no Step 60, mitigando riscos de overfitting.
+
+### 2. Orquestração e Guardrails de Segurança com LangGraph
+Substituímos o encadeamento linear tradicional por um sistema baseado em grafos de estados (StateGraph) para garantir o cumprimento de protocolos clínicos:
+* **Roteamento Dinâmico:** Ao consultar o prontuário do paciente, a função condicional router_pending_exams verifica o status dos exames em tempo real. Se houver qualquer exame com a flag PENDING, o grafo desvia compulsoriamente para o nó de salvaguarda exames_pendentes.
+* **Travas de Segurança (Guardrails):** O sistema injeta dinamicamente regras de governança severas no prompt: proibição estrita de prescrição de medicamentos, obrigatoriedade de escrita na terceira pessoa e exigência de explicabilidade (cross-reference com métricas clínicas).
 
 ---
 
@@ -40,38 +41,39 @@ Integração com a API da OpenAI (GPT-4o) para transformar predições técnicas
 
 ```text
 /
-├── .env                           # chaves de API da OpenAI, coloque a variável CHAT_GPT_KEY = <SEU_TOKEN>
-├── note_create_raw                # Ingestão de dados brutos (Camada Bronze)
-├── note_cleaning_transform_silver # Limpeza e padronização (Camada Silver)
-├── note_create_gold               # Engenharia de features (Camada Gold)
-├── note_predict_doenca_original   # Modelos base desenvolvidos da fase 1 para comparação
-└── note_predict_doenca_alg_gen    # Pipeline principal: AG + Otimização + LLM (Fase 2)
+├── fine_tuning.ipynb                  # Notebook de download, preprocessing e fine-tuning com Unsloth
+├── tech_challenge_fase_3_langchain.ipynb # Notebook principal de execução no Google Colab
+└── hospital_project/                  # Diretório do projeto modularizado gerado em tempo de execução
+    ├── database/
+    │   └── connection.py              # Inicialização do SQLite e ferramenta de extração de prontuários
+    ├── models/
+    │   └── custom_llm.py              # Pipeline do HuggingFace encapsulando o modelo LoRA treinado
+    └── utils/
+        └── logger.py                  # Subsistema de logging clínico e geração do rastro de auditoria
 ```
 
 ## 🚀 Guia de Execução
 
 Pré-requisitos
-* Conta no Databricks Free Edition - [Login page - Databricks](https://login.databricks.com/signup?intent=SIGN_UP&provider=DB_FREE_TIER)
-* Chave de API da OpenAI. - [OpenAI - Developers](https://platform.openai.com/home)
+* Ambiente Google Colab com acelerador T4 GPU habilitado.
+* Conta no Google Drive vinculada para armazenamento e leitura dos pesos do modelo treinado.
 
-Passo 1: Configuração do Ambiente
-Configure o arquivo .env com a sua credencial:
-
-```bash
-
-CHAT_GPT_KEY = <SEU_TOKEN>
-
-```
-
-Passo 2: Execução do Notebook
-Execute os notebooks de processamento (raw -> silver -> gold) para preparar os dados.
-
-Utilize o notebook note_predict_doenca_alg_gen para rodar os 3 experimentos do Algoritmo Genético e visualizar a integração com a LLM.
+Passo 1: Execução do Fine-Tuning <br>
+1) Abra o arquivo fine_tuning.ipynb no Google Colab. <br>
+2) Execute todas as células. O script fará o download do dataset, executará a limpeza com Regex, treinará o adaptador LoRA e salvará os pesos gerados diretamente no seu Google Drive.
 
 
+Passo 2: Execução do Assistente Hospitalar (LangGraph) <br>
+1) Abra o arquivo tech_challenge_fase_3_langchain.ipynb no Google Colab. <br>
+2) Ajuste a variável caminho_salvamento para apontar para a pasta do seu Google Drive onde os pesos foram salvos no Passo 1.
+3) Execute as células. O script irá:
+* Construir fisicamente a estrutura de arquivos modularizada.
+* Inicializar o banco de dados SQLite com dados sintéticos controlados.
+* Compilar o grafo e exibir o diagrama visual da tomada de decisão.
+* Executar a inferência para o paciente selecionado, acionando as travas de segurança e persistindo os resultados em audit_trail.log.
 ---
 
 ## ✒️ Autor - Kevin Makoto Shiroma
-Projeto desenvolvido como parte da avaliação do **Tech Challenge - Fase 2**.
+Projeto desenvolvido como parte da avaliação do **Tech Challenge - Fase 3**.
 
 
