@@ -18,7 +18,7 @@ O ecossistema foi projetado para operar com total governança de dados, unindo t
 
 * **Camada de Dados:** Banco relacional SQLite local atuando como repositório de prontuários clínicos e exames controlados.
 
-* * **Governança & Compliance:** Módulo de auditoria assíncrona responsável por registrar cada transação e inferência no arquivo físico audit_trail.log.
+* **Governança & Compliance:** Módulo de auditoria assíncrona responsável por registrar cada transação e inferência no arquivo físico audit_trail.log.
 
 ## 📋 Sobre a Evolução (Fase 3)
 
